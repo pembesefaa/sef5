@@ -1,0 +1,30 @@
+
+def decision_try_entropy(x1,y1,x2,y2):
+    dtc_f=DecisionTreeClassifier(criterion="entropy")
+    dtc_f.fit(x1,y1)
+    pred_f=dtc_f.predict(x2)
+    print(confusion_matrix(y2, pred_f))
+    print(classification_report(y2, pred_f))
+    a = precision_recall_fscore_support(y2, pred_f, average="macro")
+    a = list(a)
+    a[3] = accuracy_score(y2, pred_f)
+    return a
+
+
+sup_entropy_without=decision_try_entropy(x_train,y_train,x_test,y_test)
+sup_entropy_standart=decision_try_entropy(s_x_train,y_train,s_x_test,y_test)
+sup_entropy_minmax=decision_try_entropy(m_x_train,y_train,m_x_test,y_test)
+
+
+data_last={"gini without scale":sup_gini_without,"gini standart":sup_gini_standart,
+                                "gini minmax":sup_gini_minmax,"entropy without":sup_entropy_without,
+           "entropy standart":sup_entropy_standart,"entropy minmax":sup_entropy_minmax}
+
+data_last=pd.DataFrame(data_last,index=["Precision","Recall","fscore","Accuracy"])
+
+
+writer=pd.ExcelWriter(r'C:\Users\SEFA\OneDrive\Masaüstü\dc.xlsx')
+
+data_last.to_excel(writer)
+writer.save()
+
